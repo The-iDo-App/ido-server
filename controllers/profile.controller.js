@@ -1,7 +1,5 @@
-const fs = require('fs').promises;
-const Jimp = require('jimp');
-const { v4: uuidv4 } = require('uuid');
 const { Profile } = require('../models');
+const { saveImage } = require('../utils');
 
 exports.getOne = async (req, res) => {
   let user;
@@ -21,7 +19,6 @@ exports.get = async (req, res) => {
   } catch (err) {
     throw err;
   }
-  console.log(process.env.APPS_SUBDOMAIN);
   return res.json({ success: true, users });
 };
 
@@ -42,24 +39,7 @@ exports.post = async (req, res) => {
   }
   if (req.file) {
     try {
-      let root = './public/apps/uploads/';
-      let tmp_path = req.file.path;
-      let target_path = root + req.file.filename + '.png';
-      let originalImage =
-        process.env.APPS_SUBDOMAIN + '/uploads/' + req.file.filename + '.png';
-      let a = await fs.readFile(tmp_path);
-      await fs.writeFile(target_path, a);
-
-      let filename = uuidv4() + '.png';
-      let blurredImage = root + filename;
-      let image = await Jimp.read(originalImage);
-      image
-        .blur(2, function (err) {
-          if (err) throw err;
-        })
-        .write(blurredImage);
-
-      blurredImage = process.env.APPS_SUBDOMAIN + '/uploads/' + filename;
+      const { originalImage, blurredImage } = await saveImage(req.file);
 
       console.log({ originalImage, blurredImage });
       user = await Profile.findOneAndUpdate(
