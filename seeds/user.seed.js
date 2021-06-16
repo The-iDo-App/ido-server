@@ -11,15 +11,14 @@ module.exports = async () => {
     let birthday = faker.datatype.datetime();
     let username = firstName.split(' ')[0] + birthday.toString().split(' ')[2];
     username = username.toLowerCase();
-    let user = {
+    let user = await User.create({
       username,
       firstName,
       lastName,
       mobileNumber: '09123456789',
       orientation: 'Straight (male)',
       birthday,
-    };
-    console.log(user);
+    });
 
     await Profile.create({
       userId: user._id,
