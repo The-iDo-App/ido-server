@@ -3,12 +3,11 @@ const router = express.Router();
 const { loginController } = require('../controllers');
 
 
-
-router.route('/:userId').get(loginController.getOne);
+router.route('/g').get(loginController.getCode);
+router.route('/g/googleauth').get(loginController.googleSign);
 
 router
     .route('/')
-    .get(loginController.get)
     .post(loginController.post);
 
 module.exports = router;
