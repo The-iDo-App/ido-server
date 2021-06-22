@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  sex: {
+    type: String,
+    default: '',
+  },
   birthday: {
     type: Date,
     required: true,
@@ -72,6 +76,15 @@ const userSchema = new mongoose.Schema({
   employment: {
     companyName: { type: String, default: '' },
     position: { type: String, default: '' },
+  },
+  blockedUsers: {
+    type: [mongoose.Schema.Types.ObjectID],
+    default: [],
+    ref: 'User',
+  },
+  leftConversations: {
+    type: [mongoose.Schema.Types.ObjectID],
+    default: [],
   },
 });
 
