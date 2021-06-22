@@ -1,5 +1,6 @@
 const faker = require('faker');
 const { User, Profile } = require('../models');
+const { generateToken } = require('../utils');
 
 module.exports = async () => {
   await User.deleteMany({});
@@ -20,7 +21,7 @@ module.exports = async () => {
       birthday,
     });
 
-    await Profile.create({
+    profile = await Profile.create({
       userId: user._id,
       picture: {
         originalImage:
@@ -28,5 +29,7 @@ module.exports = async () => {
         blurredImage: 'https://via.placeholder.com/150C/?text=' + user.username,
       },
     });
+
+    console.log(generateToken(user));
   }
 };
