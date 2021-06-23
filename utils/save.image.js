@@ -15,13 +15,23 @@ module.exports = async (file) => {
   let filename = uuidv4() + '.png';
   let blurredImage = rootDir + filename;
   let image = await Jimp.read(originalImage);
-  image
-    .blur(2, function (err) {
-      if (err) throw err;
-    })
-    .write(blurredImage);
+
+  await image.resize(500, Jimp.AUTO);
+
+  let { width, height } = image.bitmap;
+  if (height > width) {
+    // naka portrait
+    await image.crop(0, (height - width) / 2, width, width);
+  } else if (height < width) {
+    // naka landscape
+    await image.crop((width - height) / 2, 0, height, height);
+  }
+  await image.writeAsync(targetPath);
+
+  await image.blur(2);
+  await image.writeAsync(blurredImage);
   blurredImage = rootUrl + filename;
 
-  console.log({ originalImage, blurredImage });
+  console.log({ originalImage, blurredImage, width, height });
   return { originalImage, blurredImage };
 };
