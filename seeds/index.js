@@ -6,7 +6,7 @@ const seed = async () => {
     await require('./user.seed')();
     await require('./avatar.seed')();
     await require('./question.seed')();
-    // await require('./test.seed')();
+    await require('./test.seed')();
     process.exit(0);
   } catch (err) {
     console.log(err);
