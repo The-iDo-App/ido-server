@@ -1,18 +1,23 @@
 const { User, Profile, Match, Evaluation } = require('../models');
 
-const getInfo = async (ids) => {
+const getInfo = async (userId, ids) => {
   let users,
     profiles,
     evaluations,
     data = [];
   try {
-    users = ids ? await User.find({ _id: { $in: ids } }) : await User.find();
+    users = ids
+      ? await User.find({ _id: { $in: ids } })
+      : await User.find({ _id: { $ne: userId } });
     profiles = ids
       ? await Profile.find({ userId: { $in: ids } })
-      : await Profile.find();
+      : await Profile.find({ userId: { $ne: userId } });
     evaluations = ids
       ? await Evaluation.find({ userId: { $in: ids } }).populate('interest')
-      : await Evaluation.find().populate('interest');
+      : await Evaluation.find({ userId: { $ne: userId } }).populate('interest');
+    matches = await Match.find({
+      participants: { $elemMatch: { userId, isLike: false } },
+    });
   } catch (err) {
     throw err;
   }
@@ -21,7 +26,6 @@ const getInfo = async (ids) => {
     ? ids
     : JSON.parse(JSON.stringify(evaluations.map((user) => user.userId)));
 
-  console.log(profiles);
   ids.map((id) => {
     let user = users.filter((user) => id == user._id)[0];
     let profile = profiles.filter((profile) => id == profile.userId)[0];
@@ -30,6 +34,14 @@ const getInfo = async (ids) => {
     )[0];
     data.push({ _id: id, user, profile, evaluation });
   });
+
+  let notMatchedIds = matches.map((match) =>
+    match.participants
+      .filter((user) => user.userId != userId)[0]
+      .userId.toString()
+  );
+
+  data = data.filter((user) => notMatchedIds.includes(user._id));
 
   return data;
 };
@@ -86,13 +98,13 @@ exports.get = async (req, res) => {
     return res.json({ success: true, ids });
   } else if (req.query.batch) {
     try {
-      users = await getInfo(req.query.ids);
+      users = await getInfo(userId, req.query.ids);
     } catch (err) {
       throw err;
     }
   } else {
     try {
-      users = await getInfo();
+      users = await getInfo(userId);
     } catch (err) {
       throw err;
     }
