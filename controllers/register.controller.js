@@ -20,17 +20,17 @@ exports.createUser = async(req, res) => {
     const lastName = req.body.lastName;
     const username = req.body.username;
     const birthday = new Date(req.body.birthday);
-    const gender = req.body.gender;
+    const sex = req.body.sex;
     const orientation = req.body.orientation;
-    const str = req.body.address;
-    const fullAddress = new Array("", "", "", "", "");
-    if (str) fullAddress = str.split(',');
+    const fullAddress = req.body.address.split(',');
+    // const fullAddress = new Array("", "", "", "", "");
     const address = {
-        city: fullAddress[0],
-        province: fullAddress[1],
-        country: fullAddress[2],
-        latitude: fullAddress[3],
-        longitutde: fullAddress[4],
+        postalCode: fullAddress[0],
+        city: fullAddress[1],
+        province: fullAddress[2],
+        country: fullAddress[3],
+        latitude: fullAddress[4],
+        longitutde: fullAddress[5],
     };
     const employment = req.body.employment;
 
@@ -46,14 +46,14 @@ exports.createUser = async(req, res) => {
     const drink = req.body.drink;
     const smoke = req.body.smoke;
     const wantKids = req.body.wantKids;
-    const sports = req.body.sports;
-    const hobbies = req.body.hobbies;
-    const musicGenre = req.body.musicGenre;
-    const movieGenre = req.body.movieGenre;
-    const pets = req.body.pets;
-    const books = req.body.books;
-    const food = req.body.food;
-
+    // const wantMarried = req.body.wantMarried;
+    const sports = req.body.sports.split(',');
+    const hobbies = req.body.hobbies.split(',');
+    const musicGenre = req.body.musicGenre.split(',');
+    const movieGenre = req.body.movieGenre.split(',');
+    const pets = req.body.pets.split(',');
+    const books = req.body.books.split(',');
+    const food = req.body.food.split(',');
 
     try {
         const user = await User.create({
@@ -61,7 +61,7 @@ exports.createUser = async(req, res) => {
             lastName,
             username,
             birthday,
-            gender,
+            sex,
             orientation,
             address,
             employment,
@@ -80,6 +80,7 @@ exports.createUser = async(req, res) => {
             drink,
             smoke,
             wantKids,
+            wantMarried,
             sports,
             hobbies,
             musicGenre,
@@ -95,5 +96,5 @@ exports.createUser = async(req, res) => {
         throw err;
     }
 
-    return res.json({ 'success': 'user created' });
+    return res.json({ 'user_id': userId });
 }

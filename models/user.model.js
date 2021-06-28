@@ -52,6 +52,10 @@ const userSchema = new mongoose.Schema({
         default: 'unverified',
     },
     address: {
+        postalCode: {
+            type: String,
+            default: '',
+        },
         city: {
             type: String,
             default: '',
