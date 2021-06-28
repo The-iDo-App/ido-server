@@ -19,6 +19,11 @@ module.exports = async () => {
       mobileNumber: '09123456789',
       orientation: 'Straight (male)',
       birthday,
+      address: {
+        city: 'Some City',
+        latitude: 14 + Math.random(),
+        longitude: 121 + Math.random(),
+      },
     });
 
     profile = await Profile.create({
@@ -28,6 +33,7 @@ module.exports = async () => {
           'https://via.placeholder.com/150C/?text=' + user.username,
         blurredImage: 'https://via.placeholder.com/150C/?text=' + user.username,
       },
+      shortDescription: faker.lorem.words(),
     });
 
     console.log(generateToken(user));
