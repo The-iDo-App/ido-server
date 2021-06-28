@@ -306,7 +306,7 @@ module.exports = async () => {
       });
       await Match.create({
         participants: [
-          { isLike: true, userId: currentId },
+          { isLike: false, userId: currentId },
           { isLike: false, userId: users[j]._id },
         ],
       });
