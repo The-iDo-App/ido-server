@@ -9,6 +9,7 @@ const {
 const faker = require('faker');
 
 const random = (arr, min = 1, max = 1) => {
+  arr = arr.slice(0);
   let chosen = [];
   let n = Math.floor(Math.random() * (max + 1 - min)) + min;
   for (let i = 0; i < n; i++) {
@@ -306,7 +307,7 @@ module.exports = async () => {
       });
       await Match.create({
         participants: [
-          { isLike: true, userId: currentId },
+          { isLike: false, userId: currentId },
           { isLike: false, userId: users[j]._id },
         ],
       });
