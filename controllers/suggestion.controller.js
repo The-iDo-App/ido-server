@@ -1,25 +1,11 @@
 const { User, Profile, Match, Evaluation } = require('../models');
+const {
+  getDistance,
+  getInterestOneScore,
+  getInterestTwoScore,
+  getQuestionsScore,
+} = require('../utils');
 const mongoose = require('mongoose');
-
-const getDistance = (lat1, lon1, lat2, lon2) => {
-  console.log(lat1, lon1, lat2, lon2);
-  var R = 6371; // Radius of the earth in km
-  var dLat = deg2rad(lat2 - lat1); // deg2rad below
-  var dLon = deg2rad(lon2 - lon1);
-  var a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(deg2rad(lat1)) *
-      Math.cos(deg2rad(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  var d = R * c; // Distance in km
-  return d;
-};
-
-const deg2rad = (deg) => {
-  return deg * (Math.PI / 180);
-};
 
 const getInfo = async (userId, ids) => {
   let users,
@@ -67,6 +53,19 @@ const getInfo = async (userId, ids) => {
   return data;
 };
 
+const getUserInfo = async (userId) => {
+  let user, profile, evaluation;
+  try {
+    user = await User.findOne({ _id: userId });
+    profile = await Profile.findOne({ userId });
+    evaluation = await Evaluation.findOne({ userId }).populate('interest');
+  } catch (err) {
+    throw err;
+  }
+
+  return { _id: userId, user, profile, evaluation };
+};
+
 const prepare = (arr, user) => {
   let data = [];
   arr.map((e) => {
@@ -84,9 +83,16 @@ const prepare = (arr, user) => {
     let distance = getDistance(
       e.user.address.latitude,
       e.user.address.longitude,
-      user.address.latitude,
-      user.address.longitude
+      user.user.address.latitude,
+      user.user.address.longitude
     ).toFixed(1);
+
+    let matchRate =
+      getInterestOneScore(e, user) * 0.3 +
+      getInterestTwoScore(e, user) * 0.45 +
+      getQuestionsScore(e, user) * 0.25;
+
+    matchRate = Math.round(matchRate) + '%';
 
     data.push({
       _id: e.user._id,
@@ -104,7 +110,7 @@ const prepare = (arr, user) => {
         country: e.user.address.country,
         distance: distance.toString() === 'NaN' ? '-' : distance,
       },
-      matchRate: '70%',
+      matchRate,
       age,
       interest,
     });
@@ -141,19 +147,17 @@ exports.get = async (req, res) => {
 
   let user;
   try {
-    user = await User.findOne({ _id: userId });
+    user = await getUserInfo(userId);
   } catch (err) {
     throw err;
   }
   users = prepare(users, user);
-  console.log(users);
   return res.json({ success: true, users });
 };
 
 exports.post = async (req, res) => {
   let userId = req.user._id;
   let otherUserId = req.params.userId;
-  console.log(userId, otherUserId);
   let match;
   try {
     match = await Match.findOne({
