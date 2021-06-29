@@ -1,4 +1,5 @@
 const { User, Profile, Match, Evaluation } = require('../models');
+const mongoose = require('mongoose');
 
 const getDistance = (lat1, lon1, lat2, lon2) => {
   console.log(lat1, lon1, lat2, lon2);
@@ -88,6 +89,7 @@ const prepare = (arr, user) => {
     ).toFixed(1);
 
     data.push({
+      _id: e.user._id,
       username: e.user.username,
       firstName: e.user.firstName,
       lastName: e.user.lastName,
@@ -146,4 +148,60 @@ exports.get = async (req, res) => {
   users = prepare(users, user);
   console.log(users);
   return res.json({ success: true, users });
+};
+
+exports.post = async (req, res) => {
+  let userId = req.user._id;
+  let otherUserId = req.params.userId;
+  console.log(userId, otherUserId);
+  let match;
+  try {
+    match = await Match.findOne({
+      participants: {
+        $all: [
+          {
+            $elemMatch: {
+              userId: mongoose.Types.ObjectId(userId),
+              isLike: false,
+            },
+          },
+          {
+            $elemMatch: { userId: mongoose.Types.ObjectId(otherUserId) },
+          },
+        ],
+      },
+    });
+  } catch (err) {
+    throw err;
+  }
+
+  let isNew = false;
+  if (match) {
+    let participants = match.participants;
+    participants = participants.map((user) => {
+      if (user.userId == userId) {
+        user.isLike = true;
+      }
+      return user;
+    });
+    try {
+      await match.save();
+    } catch (err) {
+      throw err;
+    }
+  } else {
+    isNew = true;
+    try {
+      match = await Match.create({
+        participants: [
+          { userId, isLike: true },
+          { userId: otherUserId, isLike: false },
+        ],
+      });
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  return res.json({ match, isNew });
 };
