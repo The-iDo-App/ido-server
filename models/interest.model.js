@@ -37,10 +37,6 @@ const interestSchema = new mongoose.Schema({
         type: String,
         default: '',
     },
-    drink: {
-        type: String,
-        default: '',
-    },
     smoke: {
         type: String,
         default: '',
@@ -54,10 +50,6 @@ const interestSchema = new mongoose.Schema({
         default: '',
     },
     pets: {
-        type: [String],
-        default: [],
-    },
-    passion: {
         type: [String],
         default: [],
     },
@@ -77,15 +69,15 @@ const interestSchema = new mongoose.Schema({
         type: [String],
         default: [],
     },
-    pets: {
-        type: [String],
-        default: [],
-    },
     books: {
         type: [String],
         default: [],
     },
     food: {
+        type: [String],
+        default: [],
+    },
+    drinks: {
         type: [String],
         default: [],
     },

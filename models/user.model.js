@@ -3,15 +3,15 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
-        required: true,
+        // required: true,
     },
     lastName: {
         type: String,
-        required: true,
+        // required: true,
     },
     username: {
         type: String,
-        required: true,
+        // required: true,
     },
     mobileNumber: {
         type: String,
@@ -31,11 +31,11 @@ const userSchema = new mongoose.Schema({
     },
     orientation: {
         type: String,
-        required: true,
+        // required: true,
     },
     birthday: {
-        type: String,
-        required: true,
+        type: Date,
+        // required: true,
     },
     showActiveStatus: {
         type: Boolean,
