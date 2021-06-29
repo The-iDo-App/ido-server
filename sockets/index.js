@@ -1,68 +1,81 @@
 const { User, Message, Profile } = require('../models');
+const { generateToken } = require('../utils');
 const mongoose = require('mongoose');
 
 module.exports = (client) => {
   client.on('connection', async function (socket) {
     // Get chats from mongo collection
-    // socket.on('viewOne', async function (data) {
-    //   let roomId =
-    //     data.from > data.to ? data.from + data.to : data.to + data.from;
+    socket.on('viewOne', async function (data) {
+      let roomId =
+        data.from > data.to ? data.from + data.to : data.to + data.from;
 
-    //   let chats = await Chat.find({}, null, { sort: { _id: 1 } })
-    //     .populate('from', ['username'])
-    //     .populate('to', ['username']);
+      let chats = await Message.find(
+        {
+          participantIds: {
+            $all: [
+              mongoose.Types.ObjectId(data.to),
+              mongoose.Types.ObjectId(data.from),
+            ],
+          },
+        },
+        null,
+        { sort: { _id: 1 } }
+      );
+      let user = await User.findOne({
+        _id: mongoose.Types.ObjectId(data.to),
+      });
+      let profile = await Profile.findOne({
+        userId: mongoose.Types.ObjectId(data.to),
+      });
 
-    //   let receiver = await User.findOne({ username: data.to });
+      let receiver = { picture: profile.picture, username: user.username };
 
-    //   chats = chats.filter((chat) => {
-    //     return (
-    //       chat.from &&
-    //       chat.to &&
-    //       ((chat.from.username === data.from && chat.to.username === data.to) ||
-    //         (chat.from.username === data.to && chat.to.username === data.from))
-    //     );
-    //   });
-
-    //   console.log(chats);
-
-    //   socket.join(roomId);
-    //   socket.emit('showChat', { receiver, chats, first: true });
-    // });
+      socket.join(roomId);
+      socket.emit('showChat', { receiver, chats, first: true });
+    });
 
     // Handle input events
-    // socket.on('input', async function (data) {
-    //   let { from, to, message } = data;
+    socket.on('input', async function (data) {
+      let { from, to, message } = data;
 
-    //   let receiver = await User.findOne({ username: to });
-    //   let sender = await User.findOne({ username: from });
+      // Insert message
+      let chat = await Message.create({
+        senderId: from,
+        participantIds: [from, to],
+        body: message,
+      });
 
-    //   // Insert message
-    //   let chat = await Chat.create({
-    //     from: sender._id,
-    //     to: receiver._id,
-    //     message,
-    //   });
+      let user = await User.findOne({ _id: mongoose.Types.ObjectId(from) });
+      let profile = await Profile.findOne({
+        userId: mongoose.Types.ObjectId(from),
+      });
+      let sender = {
+        _id: from,
+        picture: profile.picture,
+        username: user.username,
+      };
 
-    //   chat = await chat
-    //     .populate('from', ['username'])
-    //     .populate('to', ['username'])
-    //     .execPopulate();
+      user = await User.findOne({ _id: mongoose.Types.ObjectId(to) });
+      profile = await Profile.findOne({
+        userId: mongoose.Types.ObjectId(to),
+      });
+      let receiver = {
+        _id: to,
+        picture: profile.picture,
+        username: user.username,
+      };
+      // Send status object
+      let roomId = from > to ? from + to : to + from;
 
-    //   // Send status object
-    //   let roomId = from > to ? from + to : to + from;
+      socket.join(roomId);
+      // socket.join(receiver.username);
 
-    //   socket.join(roomId);
-    //   // socket.join(receiver.username);
+      // Send users and room info
+      client.to(roomId).emit('showChat', { receiver, chats: [chat] });
 
-    //   // Send users and room info
-    //   client.to(roomId).emit('showChat', { receiver, chats: [chat] });
-
-    //   chat.message = from + ': ' + chat.message;
-    //   socket.in(roomId).emit('newMessage', { receiver, sender, chats: [chat] });
-    //   socket
-    //     .in(receiver.username)
-    //     .emit('newMessage', { receiver, sender, chats: [chat] });
-    // });
+      socket.in(roomId).emit('newMessage', { receiver, sender, chats: [chat] });
+      socket.in(to).emit('newMessage', { receiver, sender, chats: [chat] });
+    });
 
     socket.on('viewAllUsers', async function (userId) {
       socket.join(userId);
