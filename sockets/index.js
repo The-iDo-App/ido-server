@@ -139,6 +139,8 @@ module.exports = (client) => {
         return a.latestMessageId > b.latestMessageId ? -1 : 1;
       });
 
+      // dont show blocked user
+      users = users.filter((user) => !current.blockedUsers.includes(user._id));
       socket.emit('showAllUsers', users);
     });
   });
