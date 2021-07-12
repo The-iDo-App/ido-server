@@ -1,15 +1,16 @@
-const { Profile } = require('../models');
+const { Profile, Interest } = require('../models');
 const { saveImage } = require('../utils');
 
 exports.getOne = async (req, res) => {
-  let user;
+  let user, interest;
   try {
     user = await Profile.findOne({ userId: req.params.userId });
+    interest = await Interest.findOne({ userId: req.params.userId });
   } catch (err) {
     throw err;
   }
   if (!user) return res.json({ error: 'Not Found' });
-  return res.json({ success: true, user });
+  return res.json({ success: true, user, interest });
 };
 
 exports.get = async (req, res) => {
