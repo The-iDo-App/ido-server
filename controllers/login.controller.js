@@ -2,8 +2,22 @@
 
 const { User } = require('../models');
 
+
+exports.post = async(req, res) => {
+    const email = req.params.email;
+    const password = req.body.password;
+    console.log(email, password);
+    let userInfo;
+    try {
+        userInfo = await User.findOne({ email, password })
+    } catch (err) {
+        throw (err)
+    }
+    res.json(userInfo)
+}
+
 exports.get = async(req, res) => {
-    res.json({ 'success': 'true' });
+    res.json({ 'success': true })
 }
 
 exports.getGmail = async(req, res) => {

@@ -6,6 +6,9 @@ const { loginController } = require('../controllers');
 router.route('/')
     .get(loginController.get);
 
+router.route('/email/:email')
+    .post(loginController.post);
+
 router.route('/gmail/:gmail')
     .get(loginController.getGmail);
 
