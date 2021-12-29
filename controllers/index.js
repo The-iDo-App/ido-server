@@ -5,6 +5,7 @@ const registerController = require('./registration.controller');
 const avatarController = require('./avatar.controller');
 const loginController = require('./login.controller');
 const questionController = require('./question.controller');
+const evaluationController = require('./evaluation.controller');
 
 
 module.exports = {
@@ -15,4 +16,5 @@ module.exports = {
     avatarController,
     loginController,
     questionController,
+    evaluationController,
 };
