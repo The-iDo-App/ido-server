@@ -53,6 +53,8 @@ exports.createUser = async(req, res) => {
             firstName,
             lastName,
             username,
+            email,
+            password,
             birthday,
             sex,
             orientation,
