@@ -21,7 +21,7 @@ exports.get = async(req, res) => {
 }
 
 exports.getGmail = async(req, res) => {
-    let gmail = req.params;
+    let gmail;
     try {
         gmail = await User.findOne({ gmail: req.params.gmail });
     } catch (err) {
@@ -46,3 +46,10 @@ exports.getFacebook = async(req, res) => {
         return res.json({ 'Error': 'User not found' });
     return res.json({ 'success': 'true', fbId });
 };
+
+// New
+
+exports.registerAccount = async(req, res) => {
+    const { email, password } = req.body;
+
+}
