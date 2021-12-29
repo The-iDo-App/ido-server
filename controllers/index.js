@@ -4,6 +4,8 @@ const suggestionController = require('./suggestion.controller');
 const registerController = require('./registration.controller');
 const avatarController = require('./avatar.controller');
 const loginController = require('./login.controller');
+const questionController = require('./question.controller');
+
 
 module.exports = {
     profileController,
@@ -12,4 +14,5 @@ module.exports = {
     registerController,
     avatarController,
     loginController,
+    questionController,
 };
