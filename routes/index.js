@@ -5,4 +5,7 @@ module.exports = (app) => {
     app.use('/api/registers', require('./registration.router'));
     app.use('/api/avatars', require('./avatar.router'));
     app.use('/api/logins', require('./login.router'));
+    app.use('/api/questions', require('./question.router'));
+    app.use('/api/evaluations', require('./evaluation.router'));
+
 };
