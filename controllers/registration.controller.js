@@ -1,10 +1,11 @@
+import { Profile } from '../models';
 const express = require('express');
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const { User, Interest } = require('../models');
-const { generateToken, saveImage } = require('../utils');
+const { User, Interest, Profile } = require('../models');
+const { generateToken } = require('../utils');
 
 exports.get = async(req, res) => {
     return res.json({ 'success': 'true' });
@@ -59,6 +60,15 @@ exports.createUser = async(req, res) => {
         });
         userId = user._id;
 
+        const { originalImage, blurredImage } = req.body;
+        let userProfile = await Profile.create({
+            picture: {
+                originalImage,
+                blurredImage
+            },
+            userId,
+        });
+
         let userInterest = await Interest.create({
             userId,
             genderPref,
@@ -95,5 +105,5 @@ exports.uploadImage = async(req, res) => {
         console.log({ originalImage, blurredImage });
         return res.json({ originalImage, blurredImage });
     }
-    return res.json({ "nothing": "hehe" });
+    return res.json({ "File": "Missing" });
 }
