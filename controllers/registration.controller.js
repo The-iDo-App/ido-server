@@ -105,5 +105,5 @@ exports.uploadImage = async(req, res) => {
         console.log({ originalImage, blurredImage });
         return res.json({ originalImage, blurredImage });
     }
-    return res.json({ "nothing": "hehe" });
+    return res.json({ "File": "Missing" });
 }
