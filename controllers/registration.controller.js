@@ -4,7 +4,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const { User, Interest, Profile } = require('../models');
-const { generateToken } = require('../utils');
+const { generateToken, saveImage } = require('../utils');
 
 exports.get = async(req, res) => {
     return res.json({ 'success': 'true' });
