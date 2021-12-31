@@ -105,4 +105,5 @@ exports.uploadImage = async(req, res) => {
         return res.json({ originalImage, blurredImage });
     }
     return res.json({ "File": "Missing" });
+    // DB_URI=mongodb+srv://ido-dating:123@ido-dating.v6bfe.mongodb.net/ido-dating?retryWrites=true&w=majority
 }
