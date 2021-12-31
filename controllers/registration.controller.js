@@ -1,9 +1,10 @@
+import { Profile } from '../models';
 const express = require('express');
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const { User, Interest } = require('../models');
+const { User, Interest, Profile } = require('../models');
 const { generateToken } = require('../utils');
 
 exports.get = async(req, res) => {
@@ -58,6 +59,15 @@ exports.createUser = async(req, res) => {
             employment,
         });
         userId = user._id;
+
+        const { originalImage, blurredImage } = req.body;
+        let userProfile = await Profile.create({
+            picture: {
+                originalImage,
+                blurredImage
+            },
+            userId,
+        });
 
         let userInterest = await Interest.create({
             userId,
