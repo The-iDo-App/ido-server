@@ -88,3 +88,12 @@ exports.createUser = async(req, res) => {
     var access_token = generateToken(user);
     return res.json({ 'user_id': userId, interestId, 'access_token': access_token });
 }
+
+exports.uploadImage = async(req, res) => {
+    if (req.file) {
+        const { originalImage, blurredImage } = await saveImage(req.file);
+        console.log({ originalImage, blurredImage });
+        return res.json({ originalImage, blurredImage });
+    }
+    return res.json({ "nothing": "hehe" });
+}
