@@ -13,7 +13,7 @@ exports.post = async(req, res) => {
         var access_token = generateToken(user);
         return res.status(200).json({ access_token });
     }
-    return res.status(404).json({ "Error": "User not found!" });
+    return res.json({ "Error": "User not found!" });
 }
 
 exports.get = async(req, res) => {
