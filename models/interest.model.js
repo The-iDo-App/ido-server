@@ -38,8 +38,8 @@ const interestSchema = new mongoose.Schema({
         default: '',
     },
     drinks: {
-        type: [String],
-        default: [],
+        type: String,
+        default: '',
     },
     smoke: {
         type: String,
