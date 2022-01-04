@@ -3,12 +3,16 @@ const mongoose = require('mongoose');
 const picture = {
     originalImage: {
         type: String,
-        required: true,
+        // required: true,
     },
     blurredImage: {
         type: String,
-        required: true,
+        // required: true,
     },
+    avatar: {
+        type: String,
+        // required: true,
+    }
 };
 
 const profileSchema = new mongoose.Schema({
