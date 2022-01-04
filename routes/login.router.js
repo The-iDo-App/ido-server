@@ -4,9 +4,7 @@ const { loginController } = require('../controllers');
 
 
 router.route('/')
-    .get(loginController.get);
-
-router.route('/email/:email')
+    .get(loginController.get)
     .post(loginController.post);
 
 router.route('/gmail/:gmail')
