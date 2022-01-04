@@ -1,23 +1,23 @@
-// http://localhost:5000/api/logins/facebook/${fbId}
-
 const { User } = require('../models');
-
+const { generateToken } = require('../utils');
 
 exports.post = async(req, res) => {
-    const email = req.params.email;
-    const password = req.body.password;
-    console.log(email, password);
-    let userInfo;
+    const { email, password } = req.body;
+    let user;
     try {
-        userInfo = await User.findOne({ email, password })
+        user = await User.findOne({ email, password })
     } catch (err) {
         throw (err)
     }
-    res.json(userInfo)
+    if (user) {
+        var access_token = generateToken(user);
+        return res.status(200).json({ access_token });
+    }
+    return res.json({ "Error": "User not found!" });
 }
 
 exports.get = async(req, res) => {
-    res.json({ 'success': true })
+    return res.json({ 'success': true })
 }
 
 exports.getGmail = async(req, res) => {
@@ -46,10 +46,3 @@ exports.getFacebook = async(req, res) => {
         return res.json({ 'Error': 'User not found' });
     return res.json({ 'success': 'true', fbId });
 };
-
-// New
-
-exports.registerAccount = async(req, res) => {
-    const { email, password } = req.body;
-
-}

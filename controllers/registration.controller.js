@@ -10,6 +10,17 @@ exports.get = async(req, res) => {
     return res.json({ 'success': 'true' });
 };
 
+exports.getUser = async(req, res) => {
+    let { email } = req.body;
+    let user;
+    try {
+        user = await User.findOne({ email })
+    } catch (err) {
+        throw err;
+    }
+    return res.json({ 'success': 'true', user });
+};
+
 exports.createUser = async(req, res) => {
     //USER PROFILE
     const { firstName, lastName, username, email, password, sex, orientation, employment, address } = req.body;
@@ -59,11 +70,12 @@ exports.createUser = async(req, res) => {
         });
         userId = user._id;
 
-        const { originalImage, blurredImage } = req.body;
+        const { originalImage, blurredImage, avatar } = req.body;
         let userProfile = await Profile.create({
             picture: {
                 originalImage,
-                blurredImage
+                blurredImage,
+                avatar
             },
             userId,
         });
@@ -102,7 +114,7 @@ exports.uploadImage = async(req, res) => {
     if (req.file) {
         const { originalImage, blurredImage } = await saveImage(req.file);
         console.log({ originalImage, blurredImage });
-        return res.json({ originalImage, blurredImage });
+        return res.status(200).json({ originalImage, blurredImage });
     }
-    return res.json({ "File": "Missing" });
+    return res.json({ "Error": "File missing!" });
 }
