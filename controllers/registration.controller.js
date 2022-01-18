@@ -55,6 +55,10 @@ exports.createUser = async(req, res) => {
     let userId;
     let interestId;
     let user;
+
+    let existing = await User.findOne({ email });
+    if (existing)
+        return res.json({ "Success": "User created" });
     try {
         user = await User.create({
             firstName,
