@@ -18,6 +18,10 @@ const messageSchema = new mongoose.Schema({
     default: Date.now,
   },
   timeSeen: Date,
+  image: {
+    type: String,
+    default: '',
+  },
 });
 
 const Message = mongoose.model('Message', messageSchema);

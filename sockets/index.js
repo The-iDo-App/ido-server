@@ -40,13 +40,14 @@ module.exports = (client) => {
 
     // Handle input events
     socket.on('input', async function (data) {
-      let { from, to, message } = data;
+      let { from, to, message, image } = data;
 
       // Insert message
       let chat = await Message.create({
         senderId: from,
         participantIds: [from, to],
-        body: message,
+        body: image ? 'sent an image' : message,
+        image,
       });
 
       let user = await User.findOne({ _id: mongoose.Types.ObjectId(from) });
