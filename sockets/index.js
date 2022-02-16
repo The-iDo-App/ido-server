@@ -78,6 +78,7 @@ module.exports = (client) => {
     });
 
     socket.on('viewAllUsers', async function (userId) {
+      console.log(userId);
       socket.join(userId);
       let users = await User.find({
         _id: { $ne: mongoose.Types.ObjectId(userId) },
@@ -139,8 +140,12 @@ module.exports = (client) => {
         return a.latestMessageId > b.latestMessageId ? -1 : 1;
       });
 
+      console.log(users);
+
       // dont show blocked user
-      users = users.filter((user) => !current.blockedUsers.includes(user._id));
+      users = users.filter(
+        (user) => current && !current.blockedUsers.includes(user._id)
+      );
       socket.emit('showAllUsers', users);
     });
   });
