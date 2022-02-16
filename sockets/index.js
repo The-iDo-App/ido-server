@@ -6,6 +6,7 @@ module.exports = (client) => {
   client.on('connection', async function (socket) {
     // Get chats from mongo collection
     socket.on('viewOne', async function (data) {
+      console.log(data);
       let roomId =
         data.from > data.to ? data.from + data.to : data.to + data.from;
 
@@ -28,7 +29,10 @@ module.exports = (client) => {
         userId: mongoose.Types.ObjectId(data.to),
       });
 
-      let receiver = { picture: profile.picture, username: user.username };
+      let receiver = {
+        picture: profile.picture,
+        username: user.username,
+      };
 
       socket.join(roomId);
       socket.emit('showChat', { receiver, chats, first: true });
@@ -49,6 +53,7 @@ module.exports = (client) => {
       let profile = await Profile.findOne({
         userId: mongoose.Types.ObjectId(from),
       });
+
       let sender = {
         _id: from,
         picture: profile.picture,
@@ -73,8 +78,10 @@ module.exports = (client) => {
       // Send users and room info
       client.to(roomId).emit('showChat', { receiver, chats: [chat] });
 
-      socket.in(roomId).emit('newMessage', { receiver, sender, chats: [chat] });
-      socket.in(to).emit('newMessage', { receiver, sender, chats: [chat] });
+      // let temp = { ...chat._doc, profile };
+
+      // socket.in(roomId).emit('newMessage', { receiver, sender, chats: [temp] });
+      // socket.in(to).emit('newMessage', { receiver, sender, chats: [temp] });
     });
 
     socket.on('viewAllUsers', async function (userId) {
@@ -133,7 +140,13 @@ module.exports = (client) => {
             timeSent = chat.timeSent;
           }
         });
-        return { ...user, latestMessage, latestMessageId, timeSent };
+        return {
+          ...user,
+          latestMessage,
+          latestMessageId,
+          timeSent,
+          myId: userId,
+        };
       });
 
       users.sort((a, b) => {
