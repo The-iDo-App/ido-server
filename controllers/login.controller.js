@@ -1,6 +1,21 @@
 const { User } = require('../models');
 const { generateToken } = require('../utils');
 
+
+exports.getEmail = async(req, res) => {
+    const { email } = req.body;
+    let user;
+    try {
+        user = await User.findOne({ email })
+    } catch (err) {
+        throw (err)
+    }
+    if (user) {
+        return res.status(200).json({username: user.email });
+    }
+    return res.json({ "Error": "User not found!" });
+}
+
 exports.post = async(req, res) => {
     const { email, password } = req.body;
     let user;
@@ -14,10 +29,6 @@ exports.post = async(req, res) => {
         return res.status(200).json({username: user.username, access_token });
     }
     return res.json({ "Error": "User not found!" });
-}
-
-exports.get = async(req, res) => {
-    return res.json({ 'success': true })
 }
 
 exports.getGmail = async(req, res) => {
