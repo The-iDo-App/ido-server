@@ -6,6 +6,7 @@ const Question = require('./question.model');
 const Interest = require('./interest.model');
 const Match = require('./match.model');
 const Evaluation = require('./evaluation.model');
+const Report = require('./report.model');
 
 module.exports = {
   User,
@@ -16,4 +17,5 @@ module.exports = {
   Interest,
   Match,
   Evaluation,
+  Report,
 };
