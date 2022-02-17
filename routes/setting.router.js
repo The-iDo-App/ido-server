@@ -12,6 +12,10 @@ router
   .get([jwtAuth], settingController.personalInformation);
 
 router
+  .route('/leave-conversation')
+  .post([jwtAuth], settingController.leaveConversation);
+
+router
   .use(jwtAuth)
   .route('/blocked-users')
   .get(settingController.getBlockedUsers)

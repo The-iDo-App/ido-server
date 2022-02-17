@@ -6,7 +6,7 @@ module.exports = (client) => {
   client.on('connection', async function (socket) {
     // Get chats from mongo collection
     socket.on('viewOne', async function (data) {
-      console.log(data);
+      //console.log(data);
       let roomId =
         data.from > data.to ? data.from + data.to : data.to + data.from;
 
@@ -86,7 +86,7 @@ module.exports = (client) => {
     });
 
     socket.on('viewAllUsers', async function (userId) {
-      console.log(userId);
+      //console.log(userId);
       socket.join(userId);
       let users = await User.find({
         _id: { $ne: mongoose.Types.ObjectId(userId) },
@@ -154,7 +154,7 @@ module.exports = (client) => {
         return a.latestMessageId > b.latestMessageId ? -1 : 1;
       });
 
-      console.log(users);
+      //console.log(users);
 
       // dont show blocked user
       users = users.filter(
