@@ -37,16 +37,26 @@ exports.personalInformation = async (req, res) => {
 
 exports.getBlockedUsers = async (req, res) => {
   const userId = req.user._id;
-  let user;
+  let user, profiles;
   try {
     user = await User.findOne({ _id: userId }).populate('blockedUsers');
   } catch (err) {
     throw err;
   }
-  users = user.blockedUsers.map((user) => {
-    const { _id, username, firstName, lastName } = user;
-    return { _id, username, firstName, lastName };
+  try {
+    profiles = await Profile.find();
+  } catch (err) {
+    throw err;
+  }
+  let users = user.blockedUsers.map((user) => {
+    const { _id, username, firstName, lastName, email } = user;
+    let profile = profiles.filter((profile) => {
+      console.log(profile.userId, user._id);
+      return profile.userId.toString() == user._id.toString();
+    })[0];
+    return { _id, username, firstName, lastName, email, profile };
   });
+  console.log(users);
   return res.json({ success: true, users });
 };
 
