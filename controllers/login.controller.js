@@ -11,7 +11,7 @@ exports.getEmail = async(req, res) => {
         throw (err)
     }
     if (user) {
-        return res.status(200).json({username: user.email });
+        return res.status(200).json({ username: user.email });
     }
     return res.json({ "Error": "User not found!" });
 }
@@ -26,7 +26,8 @@ exports.post = async(req, res) => {
     }
     if (user) {
         var access_token = generateToken(user);
-        return res.status(200).json({username: user.username, access_token });
+        // console.log(access_token);
+        return res.status(200).json({ username: user.username, userId:user._id, access_token });
     }
     return res.json({ "Error": "User not found!" });
 }
