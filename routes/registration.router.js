@@ -5,11 +5,12 @@ const multer = require('multer');
 const upload = multer({ dest: './public/apps/uploads/' });
 
 router.route('/')
-    .get(registerController.get);
+    .get(registerController.get)
+    .post(registerController.getUser);
+
 
 router.route('/createAccount')
     .post(registerController.createUser);
-
 
 router.route('/uploadImage')
     .post(upload.single('image'), registerController.uploadImage);

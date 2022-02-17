@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const interestSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectID,
+        ref: 'User',
         required: true,
     },
     genderPref: {

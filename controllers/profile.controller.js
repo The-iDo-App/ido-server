@@ -13,8 +13,25 @@ exports.getOne = async(req, res) => {
     return res.json({ success: true, user, interest });
 };
 
-exports.get = async(req, res) => {
-    let users;
+exports.getUsers = async (req, res) => {
+  let users;
+  try {
+    users = await Profile.find().populate('userId');
+    users = users.filter(user => user.userId !== null);
+  } catch (err) {
+    throw err;
+  }
+  if(users)return res.json({ success: true, users });
+  return res.json({error: "Not found"});
+};
+
+
+exports.post = async (req, res) => {
+  let { bio } = req.body;
+  let user;
+  console.log(req.body);
+  if (bio) {
+
     try {
         users = await Profile.find();
     } catch (err) {

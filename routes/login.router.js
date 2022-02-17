@@ -3,8 +3,11 @@ const router = express.Router();
 const { loginController } = require('../controllers');
 
 
+
+router.route('/otp')
+    .post(loginController.getEmail)
+
 router.route('/')
-    .get(loginController.get)
     .post(loginController.post);
 
 router.route('/gmail/:gmail')

@@ -5,6 +5,7 @@ const upload = multer({ dest: './public/apps/uploads/' });
 const { jwtAuth, sameUser } = require('../middlewares');
 const { profileController } = require('../controllers');
 
+router.route('/users').get(profileController.getUsers);
 router.use(jwtAuth);
 router
     .route('/:userId')

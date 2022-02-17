@@ -7,7 +7,27 @@ const { User, Interest, Profile } = require('../models');
 const { generateToken, saveImage } = require('../utils');
 
 exports.get = async(req, res) => {
-    return res.json({ 'success': 'true' });
+    let user;
+    let interest;
+    try {
+        user = await Interest.find().populate('userId');
+        console.log(user);
+    } catch (err) {
+        throw err;
+    }
+    if (user) return res.json({ user });
+    return res.json({ error: "Not found" });
+};
+
+exports.getUser = async(req, res) => {
+    let { email } = req.body;
+    let user;
+    try {
+        user = await User.findOne({ email })
+    } catch (err) {
+        throw err;
+    }
+    return res.json({ 'success': 'true', user });
 };
 
 exports.getUser = async(req, res) => {
@@ -55,6 +75,10 @@ exports.createUser = async(req, res) => {
     let userId;
     let interestId;
     let user;
+
+    let existing = await User.findOne({ email });
+    if (existing)
+        return res.json({ "Success": "User created" });
     try {
         user = await User.create({
             firstName,

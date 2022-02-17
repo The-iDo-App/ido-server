@@ -7,5 +7,6 @@ module.exports = (app) => {
     app.use('/api/logins', require('./login.router'));
     app.use('/api/questions', require('./question.router'));
     app.use('/api/evaluations', require('./evaluation.router'));
+    app.use('/api/emails', require('./email.router'));
 
 };

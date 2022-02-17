@@ -6,6 +6,8 @@ const avatarController = require('./avatar.controller');
 const loginController = require('./login.controller');
 const questionController = require('./question.controller');
 const evaluationController = require('./evaluation.controller');
+const emailController = require('./email.controller');
+
 
 
 module.exports = {
@@ -17,4 +19,5 @@ module.exports = {
     loginController,
     questionController,
     evaluationController,
+    emailController,
 };
