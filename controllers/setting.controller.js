@@ -5,8 +5,28 @@ const {
   Interest,
   Match,
   Evaluation,
+  Report,
 } = require('../models');
 const mongoose = require('mongoose');
+
+const blockUser = async (userId, otherUserId) => {
+  if (userId === otherUserId) return { error: "You can't block yourself" };
+  try {
+    let blockedUser = await User.findOne({ _id: otherUserId });
+    if (blockedUser) {
+      let user = await User.findOne({ _id: userId });
+      if (user.blockedUsers.includes(otherUserId)) {
+        return { error: 'User already blocked' };
+      }
+      user.blockedUsers.push(otherUserId);
+      user = await user.save();
+      return { success: true, user };
+    }
+    return { error: 'User Id not found' };
+  } catch (err) {
+    throw err;
+  }
+};
 
 exports.accountDeletion = async (req, res) => {
   const userId = req.user._id;
@@ -78,53 +98,55 @@ exports.unblockUser = async (req, res) => {
 exports.blockUser = async (req, res) => {
   const userId = req.user._id;
   const { user_id: blockedUserId } = req.body;
-  let user, blockedUser;
-  if (userId === blockedUserId)
-    return res.json({ error: "You can't block yourself" });
+  let data;
+
   try {
-    blockedUser = await User.findOne({ _id: blockedUserId });
-    if (blockedUser) {
-      user = await User.findOne({ _id: userId });
-      if (user.blockedUsers.includes(blockedUserId)) {
-        return res.json({ error: 'User already blocked' });
-      }
-      user.blockedUsers.push(blockedUserId);
-      user = await user.save();
-      return res.json({ success: true, user });
-    }
-    return res.json({ error: 'User Id not found' });
+    data = await blockUser(userId, blockedUserId);
   } catch (err) {
     throw err;
   }
+  return res.json(data);
 };
 
 exports.leaveConversation = async (req, res) => {
   const userId = req.user._id;
   const { user_id: otherUserId } = req.body;
-  let chats = await Message.deleteMany({
-    participantIds: {
-      $all: [
-        mongoose.Types.ObjectId(userId),
-        mongoose.Types.ObjectId(otherUserId),
-      ],
-    },
-  });
-  let user, blockedUser;
-  if (userId === otherUserId)
-    return res.json({ error: "You can't block yourself" });
+
   try {
-    blockedUser = await User.findOne({ _id: otherUserId });
-    if (blockedUser) {
-      user = await User.findOne({ _id: userId });
-      if (user.blockedUsers.includes(otherUserId)) {
-        return res.json({ error: 'User already blocked' });
-      }
-      user.blockedUsers.push(otherUserId);
-      user = await user.save();
-      return res.json({ success: true, user });
-    }
-    return res.json({ error: 'User Id not found' });
+    let chats = await Message.deleteMany({
+      participantIds: {
+        $all: [
+          mongoose.Types.ObjectId(userId),
+          mongoose.Types.ObjectId(otherUserId),
+        ],
+      },
+    });
   } catch (err) {
     throw err;
   }
+
+  try {
+    data = await blockUser(userId, otherUserId);
+  } catch (err) {
+    throw err;
+  }
+  return res.json(data);
+};
+
+exports.reportUser = async (req, res) => {
+  const userId = req.user._id;
+  const { user_id: otherUserId } = req.body;
+
+  try {
+    await Report.create({ createdBy: userId, createdFor: otherUserId });
+  } catch (err) {
+    throw err;
+  }
+
+  try {
+    data = await blockUser(userId, otherUserId);
+  } catch (err) {
+    throw err;
+  }
+  return res.json(data);
 };
