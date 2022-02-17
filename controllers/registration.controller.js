@@ -3,7 +3,7 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const { User, Interest, Profile } = require('../models');
+const { User, Interest, Profile,Match } = require('../models');
 const { generateToken, saveImage } = require('../utils');
 
 exports.getUser = async(req, res) => {
@@ -81,6 +81,23 @@ exports.createUser = async(req, res) => {
         });
         userId = user._id;
 
+        let user_id = userId;
+        let userIds = await User.find().project({
+            _id: 1
+        })
+        .toArray();
+
+        let data = []
+        userIds.map(id => {
+        data.push({
+                participants: [
+                { isLike: false, userId: id },
+                { isLike: false, userId: user_id },
+                ],
+            })
+        })
+        await Match.insertMany(data);
+        
         const { originalImage, blurredImage, avatar } = req.body;
         let userProfile = await Profile.create({
             picture: {
