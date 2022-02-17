@@ -18,6 +18,7 @@ const picture = {
 const profileSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectID,
+        ref: 'User',
         require: true,
     },
     shortDescription: {

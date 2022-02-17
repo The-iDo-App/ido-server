@@ -5,4 +5,8 @@ const { evaluationController } = require('../controllers');
 router.route('/')
     .post(evaluationController.post);
 
+router.route('/:userId')
+    .get(evaluationController.getAnswers)
+
+
 module.exports = router;

@@ -6,19 +6,6 @@ app.use(express.json());
 const { User, Interest, Profile } = require('../models');
 const { generateToken, saveImage } = require('../utils');
 
-exports.get = async(req, res) => {
-    let user;
-    let interest;
-    try {
-        user = await Interest.find().populate('userId');
-        console.log(user);
-    } catch (err) {
-        throw err;
-    }
-    if (user) return res.json({ user });
-    return res.json({ error: "Not found" });
-};
-
 exports.getUser = async(req, res) => {
     let { email } = req.body;
     let user;
@@ -66,7 +53,7 @@ exports.createUser = async(req, res) => {
     let user;
 
     let existing = await User.findOne({ email });
-    if (existing)
+    if (existing.length)
         return res.json({ "Success": "User created" });
     try {
         user = await User.create({
