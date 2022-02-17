@@ -1,4 +1,4 @@
-const { User, Message, Profile } = require('../models');
+const { User, Message, Profile, Match } = require('../models');
 const { generateToken } = require('../utils');
 const mongoose = require('mongoose');
 
@@ -155,6 +155,24 @@ module.exports = (client) => {
       });
 
       //console.log(users);
+      let matches = await Match.find({
+        $and: [
+          { participants: { $elemMatch: { userId, isLike: true } } },
+          { participants: { $elemMatch: { isLike: true } } },
+        ],
+      });
+
+      console.log(matches);
+
+      let matchIds = matches.map((match) =>
+        match.participants[0].userId.toString() == userId
+          ? match.participants[1].userId.toString()
+          : match.participants[0].userId.toString()
+      );
+
+      // console.log(users);
+
+      users = users.filter((user) => matchIds.includes(user._id.toString()));
 
       // dont show blocked user
       users = users.filter(
