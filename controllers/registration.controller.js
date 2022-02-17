@@ -30,6 +30,17 @@ exports.getUser = async(req, res) => {
     return res.json({ 'success': 'true', user });
 };
 
+exports.getUser = async(req, res) => {
+    let { email } = req.body;
+    let user;
+    try {
+        user = await User.findOne({ email })
+    } catch (err) {
+        throw err;
+    }
+    return res.json({ 'success': 'true', user });
+};
+
 exports.createUser = async(req, res) => {
     //USER PROFILE
     const { firstName, lastName, username, email, password, sex, orientation, employment, address } = req.body;
