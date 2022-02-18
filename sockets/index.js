@@ -170,7 +170,7 @@ module.exports = (client) => {
           : match.participants[0].userId.toString()
       );
 
-      // console.log(users);
+      console.log(users);
 
       //users = users.filter((user) => matchIds.includes(user._id.toString()));
 
