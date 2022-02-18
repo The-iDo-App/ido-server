@@ -10,16 +10,19 @@ exports.get = async(req, res) => {
     try {
         interests = await Interest.find().populate('userId');
         profiles = await Profile.find().populate('userId');
+    } catch (err) {
+        throw err;
+    }
+    if (profiles.length) {
         users = JSON.parse(JSON.stringify(profiles));
         users.map(profile => {
             profile.interest = interests.filter(interest => JSON.stringify(profile.userId) === JSON.stringify(interest.userId)
             && profile.userId !== null)[0];
         })
         filteredUser = users.filter(profile => profile.userId._id.toString() !== userId);
-    } catch (err) {
-        throw err;
+        return res.json({ users: filteredUser });
+
     }
-    if (profiles.length) return res.json({ users: filteredUser });
     return res.json({ error: "Not found" });
 };
 
