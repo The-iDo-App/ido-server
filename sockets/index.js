@@ -172,7 +172,7 @@ module.exports = (client) => {
 
       // console.log(users);
 
-      users = users.filter((user) => matchIds.includes(user._id.toString()));
+      //users = users.filter((user) => matchIds.includes(user._id.toString()));
 
       // dont show blocked user
       users = users.filter(
