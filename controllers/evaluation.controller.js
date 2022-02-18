@@ -24,11 +24,12 @@ exports.getAnswers = async(req, res) => {
     let {userId} = req.params;
     try{    
         user = await Evaluation.findOne({userId}).populate('questions');
-        user.questions.map(q => questions.push(q.question));
-        
     }catch(err){
         console.log(err)
     }
-    if(questions.length) return res.json({questions,answers:user.answers});
+    if(user.questions.length){
+        user.questions.map(q => questions.push(q.question));
+        return res.json({questions,answers:user.answers});
+    } 
     return res.json({error: 'Not found'});
 }

@@ -3,7 +3,7 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const { User, Interest, Profile,Match } = require('../models');
+const { User, Interest, Profile, Match } = require('../models');
 const { generateToken, saveImage } = require('../utils');
 
 exports.getUser = async(req, res) => {
@@ -63,9 +63,6 @@ exports.createUser = async(req, res) => {
     let interestId;
     let user;
 
-    let existing = await User.findOne({ email });
-    if (existing.length)
-        return res.json({ "Success": "User created" });
     try {
         user = await User.create({
             firstName,
@@ -82,22 +79,22 @@ exports.createUser = async(req, res) => {
         userId = user._id;
 
         let user_id = userId;
-        let userIds = await User.find().project({
+        let userIds = await User.find({}, {
             _id: 1
-        })
-        .toArray();
+        });
 
         let data = []
-        userIds.map(id => {
-        data.push({
+        userIds.map(user => {
+            data.push({
                 participants: [
-                { isLike: false, userId: id },
-                { isLike: false, userId: user_id },
+                    { isLike: false, userId: user._id },
+                    { isLike: false, userId: user_id },
                 ],
             })
         })
-        await Match.insertMany(data);
-        
+
+        await Match.insertMany(data)
+
         const { originalImage, blurredImage, avatar } = req.body;
         let userProfile = await Profile.create({
             picture: {
@@ -135,7 +132,8 @@ exports.createUser = async(req, res) => {
         throw err;
     }
     var access_token = generateToken(user);
-    return res.json({ 'user_id': userId, interestId, 'access_token': access_token });
+    // console.log(access_token);
+    return res.json({ user_id: userId, interestId, access_token });
 }
 
 exports.uploadImage = async(req, res) => {

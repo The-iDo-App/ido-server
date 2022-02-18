@@ -67,7 +67,7 @@ exports.changePassword = async(req, res) => {
         throw err;
     }
     if (user)
-        return res.status(200).json({ "success": "user updated" });
+        return res.status(200).json({ "success": "user updated" ,user});
     return res.json({ "failed": "an error occured" })
 }
 

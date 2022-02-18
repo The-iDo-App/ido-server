@@ -21,6 +21,7 @@ exports.post = async(req, res) => {
     let user;
     try {
         user = await User.findOne({ email, password })
+        console.log(user);
     } catch (err) {
         throw (err)
     }
