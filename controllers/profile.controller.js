@@ -13,15 +13,13 @@ exports.get = async(req, res) => {
     } catch (err) {
         throw err;
     }
-    if (profiles.length) {
+    if (profiles) {
         users = JSON.parse(JSON.stringify(profiles));
         users.map(profile => {
             profile.interest = interests.filter(interest => JSON.stringify(profile.userId) === JSON.stringify(interest.userId)
             && profile.userId !== null)[0];
         })
-        users = users.filter(profile => profile.userId !== null);
         filteredUser = users.filter(profile => profile.userId._id.toString() !== userId && profile.userId !== null);
-//         filteredUser = users.filter(profile =>console.log(profile.userId._id.toString()));
         return res.json({ users: filteredUser });
 
     }
