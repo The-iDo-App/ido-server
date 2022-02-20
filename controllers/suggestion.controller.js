@@ -11,7 +11,8 @@ const getInfo = async (userId, ids) => {
   let users,
     profiles,
     evaluations,
-    data = [];
+    data = [],
+    matches;
   try {
     users = ids
       ? await User.find({ _id: { $in: ids } })
@@ -42,11 +43,18 @@ const getInfo = async (userId, ids) => {
     data.push({ _id: id, user, profile, evaluation });
   });
 
-  let notMatchedIds = matches.map((match) =>
-    match.participants
-      .filter((user) => user.userId != userId)[0]
-      .userId.toString()
-  );
+  let notMatchedIds = matches.map((match) => {
+    let temp = match.participants.filter((user) => {
+      return user.userId.toString() !== userId;
+    });
+    // eto may sobra kasi, userId tas userId so blank match
+    return temp.length ? temp[0].userId.toString() : '';
+  });
+
+  // tanggalin ung sobra
+  notMatchedIds = notMatchedIds.filter((id) => id);
+
+  console.log(notMatchedIds);
 
   data = data.filter((user) => notMatchedIds.includes(user._id));
 

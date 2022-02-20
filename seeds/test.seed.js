@@ -29,7 +29,7 @@ module.exports = async () => {
   await Match.deleteMany({});
   await Message.deleteMany({});
 
-  let questions = await Question.find().limit(10);
+  let questions = await Question.find();
   let temp = questions;
   questions = questions.map((question) => question._id);
 

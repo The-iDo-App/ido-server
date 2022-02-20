@@ -144,13 +144,13 @@ const getInterestTwoScore = (user1, user2) => {
   let interest2 = user2.evaluation.interest;
   let fields = [
     'sports',
-    'hobbies',
+    'Hobbies',
     'musicGenre',
     'movieGenre',
     'pets',
     'books',
     'food',
-    'drinks',
+    'drink',
   ];
 
   let score = 0;
@@ -159,6 +159,7 @@ const getInterestTwoScore = (user1, user2) => {
     score += combined.length - [...new Set(combined)].length;
   }
 
+  // console.log(score);
   return score;
 };
 
@@ -169,9 +170,11 @@ const getQuestionsScore = (user1, user2) => {
 
   // assuming na same questions
   evaluation1.questions.map((el, i) => {
+    console.log(i, evaluation2.answers[i]);
     all[el] = [evaluation1.answers[i]];
   });
   evaluation2.questions.map((el, i) => {
+    console.log(i, evaluation2.answers[i]);
     all[el].push(evaluation2.answers[i]);
   });
 
