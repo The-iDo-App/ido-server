@@ -3,10 +3,9 @@ const mongoose = require('mongoose');
 const interestSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectID,
-        ref: 'User',
         required: true,
     },
-    genderPref: {
+    gender: {
         type: String,
         default: '',
     },
@@ -38,7 +37,7 @@ const interestSchema = new mongoose.Schema({
         type: String,
         default: '',
     },
-    drinks: {
+    drink: {
         type: String,
         default: '',
     },
@@ -50,11 +49,11 @@ const interestSchema = new mongoose.Schema({
         type: String,
         default: '',
     },
-    wantMarried: {
-        type: String,
-        default: '',
-    },
     pets: {
+        type: [String],
+        default: [],
+    },
+    passion: {
         type: [String],
         default: [],
     },
@@ -62,7 +61,7 @@ const interestSchema = new mongoose.Schema({
         type: [String],
         default: [],
     },
-    hobbies: {
+    Hobbies: {
         type: [String],
         default: [],
     },
@@ -71,6 +70,10 @@ const interestSchema = new mongoose.Schema({
         default: [],
     },
     movieGenre: {
+        type: [String],
+        default: [],
+    },
+    pets: {
         type: [String],
         default: [],
     },
