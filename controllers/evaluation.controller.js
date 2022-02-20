@@ -1,7 +1,7 @@
 const { Evaluation, Question } = require('../models');
 
 exports.post = async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { userId, interest, questions, answers } = req.body;
   let evals;
   try {

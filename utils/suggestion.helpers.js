@@ -170,11 +170,11 @@ const getQuestionsScore = (user1, user2) => {
 
   // assuming na same questions
   evaluation1.questions.map((el, i) => {
-    console.log(i, evaluation2.answers[i]);
+    // console.log(i, evaluation2.answers[i]);
     all[el] = [evaluation1.answers[i]];
   });
   evaluation2.questions.map((el, i) => {
-    console.log(i, evaluation2.answers[i]);
+    // console.log(i, evaluation2.answers[i]);
     all[el].push(evaluation2.answers[i]);
   });
 

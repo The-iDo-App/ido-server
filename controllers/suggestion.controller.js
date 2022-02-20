@@ -54,7 +54,7 @@ const getInfo = async (userId, ids) => {
   // tanggalin ung sobra
   notMatchedIds = notMatchedIds.filter((id) => id);
 
-  console.log(notMatchedIds);
+  // console.log(notMatchedIds);
 
   data = data.filter((user) => notMatchedIds.includes(user._id));
 
@@ -89,11 +89,13 @@ const prepare = (arr, user) => {
     delete interest._id;
     delete interest.userId;
     let distance = getDistance(
-      e.user.address.latitude,
-      e.user.address.longitude,
-      user.user.address.latitude,
-      user.user.address.longitude
+      +e.user.address.latitude,
+      +e.user.address.longitude,
+      +user.user.address.latitude,
+      +user.user.address.longitude
     ).toFixed(1);
+
+    console.log(distance);
 
     let matchRate =
       getInterestOneScore(e, user) * 0.3 +
