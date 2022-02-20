@@ -168,9 +168,9 @@ exports.createUser = async (req, res) => {
     await Match.insertMany(data);
 
     const { originalImage, blurredImage, avatar: avatarId } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     let avatar = avatars.filter((avatar) => avatar.id == avatarId);
-    console.log(avatar);
+    // console.log(avatar);
     avatar = avatar.length ? avatar[0].avatar : '';
     let userProfile = await Profile.create({
       picture: {
@@ -220,3 +220,5 @@ exports.uploadImage = async (req, res) => {
   }
   return res.json({ Error: 'File missing!' });
 };
+
+exports.avatars = avatars;
