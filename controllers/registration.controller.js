@@ -117,8 +117,16 @@ exports.createUser = async (req, res) => {
   } = req.body;
 
   //MULTI SELECT PREF
-  const { sports, hobbies, musicGenre, movieGenre, pets, books, food, drinks } =
-    req.body;
+  const {
+    sports,
+    hobbies,
+    musicGenre,
+    movieGenre,
+    pets,
+    books,
+    food,
+    drinks: drink,
+  } = req.body;
 
   let userId;
   let interestId;
@@ -193,7 +201,7 @@ exports.createUser = async (req, res) => {
       pets,
       books,
       food,
-      drinks,
+      drink,
     });
     interestId = userInterest._id;
   } catch (err) {
