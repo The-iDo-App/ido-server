@@ -38,62 +38,49 @@ module.exports = async () => {
     let user = users[i];
     let answers = temp.map((question) => random(question.choices));
     let astrologicalSign = random([
-      'aries',
-      'taurus',
-      'gemini',
-      'cancer',
-      'leo',
-      'virgo',
-      'libra',
-      'scorpio',
-      'sagittarius',
-      'capricorn',
-      'aquarius',
-      'pisces',
+      'Aries',
+      'Taurus',
+      'Gemini',
+      'Cancer',
+      'Leo',
+      'Virgo',
+      'Libra',
+      'Scorpio',
+      'Sagittarius',
+      'Capricorn',
+      'Aquarius',
+      'Pisces',
     ]);
     let religion = random([
-      'no religion',
-      'roman catholic',
-      'islam',
-      'other christian',
-      'tribal religion',
-      'others',
-      'protestant',
+      'No Religion',
+      'Roman Catholic',
+      'Islam',
+      'Iglesia ni Cristo',
+      'Aglipayan',
+      'Mormon',
+      'Muslim',
+      'Buddhism',
+      'Seventh-day Adventist',
+      "Jehovah's Witnesses",
+      'Dating Daan',
     ]);
-    let politicalView = random([
-      'liberalism',
-      'conservatism',
-      'socialism',
-      'social democracy',
-      'communism',
-      'fascism',
-      'feminism',
-    ]);
-    let drinks = random([
-      'milk',
-      'coffee',
-      'chocolate',
-      'tea',
-      'mixed fruit',
-      'juice',
-      'energy drink',
-      'soft drinks',
-      'beer',
-      'wine',
-      'others',
+    let politicalView = random(['Liberal', 'Conservative', 'Apolitical']);
+    let drink = random([
+      "I don't drink",
+      'Moderate Drinker',
+      'Heavy Drinker',
+      'Low Tolerance',
     ]);
     let smoke = random([
       "I don't smoke",
-      'Sometimes',
-      'Cigarettes',
-      'Light and Menthol Cigarettes',
-      'E-cigarettes',
+      'I smoke',
+      'No, but second hand smoke only',
+      'Yes, but with vape only',
     ]);
     let wantKids = random([
-      'might be interested in having children',
-      'interested in having children',
-      'not interested in having children',
-      'want to adopt a child',
+      'No plans',
+      'Maybe in the future',
+      'Yes, I plan to',
     ]);
     let wantMarried = random([
       "I don't want to get married",
@@ -119,8 +106,8 @@ module.exports = async () => {
         'Rats and mice',
         'Reptiles',
       ],
-      1,
-      3
+      5,
+      11
     );
     let sports = random(
       [
@@ -137,10 +124,10 @@ module.exports = async () => {
         'Tennis',
         'Volleyball',
       ],
-      1,
-      3
+      5,
+      11
     );
-    let hobbies = random(
+    let Hobbies = random(
       [
         'Arts and Crafts',
         'Cooking',
@@ -156,8 +143,8 @@ module.exports = async () => {
         'Watching',
         'Yoga',
       ],
-      1,
-      3
+      5,
+      12
     );
     let musicGenre = random(
       [
@@ -179,8 +166,8 @@ module.exports = async () => {
         'Rock',
         'Techno',
       ],
-      1,
-      3
+      5,
+      16
     );
     let movieGenre = random(
       [
@@ -200,81 +187,56 @@ module.exports = async () => {
         'Thriller',
         'Western',
       ],
-      1,
-      3
+      5,
+      14
     );
     let books = random(
       [
-        'Mystery',
-        'Science fiction',
-        'Historical Fiction',
-        'Literary Fiction',
-        'Young Adult Fiction',
-        'Horror Fiction',
-        'Children’s literature',
-        'Short story',
-        'Thriller',
-        'Memoir',
+        'Contemporary',
+        'Dystopian',
         'Fantasy',
-        'Fairy tale',
-        'Suspense',
-        'Prose',
-        'Adventure Fiction',
-        'Drama',
-        'Detective Novel',
-        'Paranormal Romance',
-        'Romance Novel',
-        'Historical Romance',
-        'Graphic Novel',
-        'Philosophy',
-        'Crime Novel',
-        'True Crime',
-        'Mythology',
-        'History',
-        'Folklore',
+        'Manfa',
+        'Mystery',
+        'Romance',
+        'Sci-Fi',
+        'Thriller',
+        'Westerns',
       ],
-      1,
-      3
+      5,
+      8
     );
     let food = random(
       [
-        'Street foods',
-        'Lumpiang Shanghai',
-        'Pansit',
-        'Pizza',
-        'Kare-Kare',
-        'Chicken Adobo',
+        'Street Foods',
+        'Filipino Cuisine',
+        'Korean Cuisine',
+        'Chinese Cuisine',
+        'Japanese Cuisine',
+        'Fast Foods',
+        'Pastry',
         'Pasta',
-        'Hamburger',
-        'Soup',
-        'Bread',
-        'Milk Tea',
-        'Halo-halo',
-        'Silog',
-        'Lechon',
-        'Sinigang',
+        'Milktea',
       ],
-      1,
-      3
+      5,
+      8
     );
 
     let interest = await Interest.create({
       userId: user._id,
-      maxDistance: 90,
-      minDistance: 10,
-      minAge: 10,
-      maxAge: 90,
-      genderPref: faker.lorem.word(),
+      maxDistance: faker.datatype.number({ max: 20000, min: 0 }),
+      minDistance: 0,
+      minAge: 18,
+      maxAge: faker.datatype.number({ max: 65, min: 18 }),
+      gender: random(['Men', 'Women', 'Everyone']),
       astrologicalSign,
       religion,
       politicalView,
-      drinks,
       smoke,
+      drink,
       wantKids,
-      wantMarried,
       pets,
       sports,
-      hobbies,
+      Hobbies,
       musicGenre,
       movieGenre,
       books,
