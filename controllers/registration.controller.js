@@ -4,7 +4,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const avatars = [
-  { id: 25, avatar: 'Asset-256.png' },
+  { id: 25, avatar: 'Asset-154.png' },
   { id: 26, avatar: 'Asset-155.png' },
   { id: 27, avatar: 'Asset-156.png' },
   { id: 28, avatar: 'Asset-157.png' },
