@@ -1,4 +1,4 @@
-const { User, Profile, Match, Evaluation } = require('../models');
+const { User, Profile, Match, Evaluation, Interest } = require('../models');
 const {
   getDistance,
   getInterestOneScore,
@@ -93,7 +93,7 @@ const prepare = (arr, user) => {
     if (m < 0 || (m === 0 && today.getDate() < e.user.birthday.getDate())) {
       age--;
     }
-    interest = JSON.parse(JSON.stringify(e.evaluation.interest));
+    let interest = JSON.parse(JSON.stringify(e.evaluation.interest));
 
     delete interest.__v;
     delete interest._id;
@@ -119,6 +119,7 @@ const prepare = (arr, user) => {
       username: e.user.username,
       firstName: e.user.firstName,
       lastName: e.user.lastName,
+      sex: e.user.sex,
       orientation: e.user.orientation,
       employment: e.user.employment,
       verificationStatus: e.user.verificationStatus,
@@ -135,7 +136,96 @@ const prepare = (arr, user) => {
       interest,
     });
   });
-  console.log(data);
+
+  data = data.filter((otherUser) => {
+    // check age
+    let userAge = new Date().getFullYear() - user.user.birthday.getFullYear();
+    // age ni user nasa pagitan ng age pref in otherUser
+    if (
+      !(
+        userAge >= otherUser.interest.minAge &&
+        userAge <= otherUser.interest.maxAge
+      )
+    )
+      return false;
+
+    // age ni otherUser is nasa pagitan dapat ng age pref ni user
+    if (
+      !(
+        otherUser.age >= user.evaluation.interest.minAge &&
+        otherUser.age <= user.evaluation.interest.maxAge
+      )
+    )
+      return false;
+
+    // check distance
+    if (otherUser.location.distance !== '-') {
+      let distance = otherUser.location.distance * 1000; // since naka km
+      // distance is nasa pagitan dapat ng distance preference ni otherUser
+      if (
+        !(
+          distance >= otherUser.interest.minDistance &&
+          distance < otherUser.interest.maxDistance
+        )
+      )
+        return false;
+
+      // distance is nasa pagitan dapat ng distance preference ni user
+      if (
+        !(
+          distance >= user.evaluation.interest.minDistance &&
+          distance < user.evaluation.interest.maxDistance
+        )
+      )
+        return false;
+    }
+    //
+    // gender ['man', 'woman']
+    // genderPreference ['men', 'women', 'everyone']
+    let otherUserGender = otherUser.sex.toLowerCase();
+    let userGender = user.user.sex.toLowerCase();
+    let otherUserGenderPreference = otherUser.interest.gender.toLowerCase();
+    let userGenderPreference = user.evaluation.interest.gender.toLowerCase();
+    let isPossible = true;
+
+    if (
+      ['men', 'everyone'].includes(userGenderPreference) &&
+      otherUserGender === 'man'
+    )
+      isPossible = isPossible;
+    else if (
+      ['women', 'everyone'].includes(userGenderPreference) &&
+      otherUser === 'woman'
+    )
+      isPossible = isPossible;
+    else isPossible = false;
+
+    if (
+      ['men', 'everyone'].includes(otherUserGenderPreference) &&
+      userGender === 'man'
+    )
+      isPossible = isPossible;
+    else if (
+      ['women', 'everyone'].includes(otherUserGenderPreference) &&
+      userGender === 'woman'
+    )
+      isPossible = isPossible;
+    else isPossible = false;
+
+    // console.log('======================================================');
+    // console.log({
+    //   otherUserGender,
+    //   userGender,
+    //   otherUserGenderPreference,
+    //   userGenderPreference,
+    //   isPossible,
+    // });
+    // console.log('======================================================');
+
+    return isPossible;
+  });
+
+  // console.log(data);
   return data;
 };
 
@@ -144,6 +234,7 @@ exports.get = async (req, res) => {
   let users;
 
   if (req.query.idsOnly) {
+    // kulang filtering pag isLike na
     let ids;
     try {
       ids = await Evaluation.find({ userId: { $ne: userId } }, 'userId');

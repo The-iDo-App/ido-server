@@ -172,7 +172,8 @@ module.exports = (client) => {
 
       console.log(users);
 
-      //users = users.filter((user) => matchIds.includes(user._id.toString()));
+      // allow only match can be messaged
+      users = users.filter((user) => matchIds.includes(user._id.toString()));
 
       // dont show blocked user
       users = users.filter(
