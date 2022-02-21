@@ -7,6 +7,16 @@ const {
 } = require('../utils');
 const mongoose = require('mongoose');
 
+const shuffleArray = (array) => {
+  for (var i = array.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+  return array;
+};
+
 const getInfo = async (userId, ids) => {
   let users,
     profiles,
@@ -58,7 +68,7 @@ const getInfo = async (userId, ids) => {
 
   data = data.filter((user) => notMatchedIds.includes(user._id));
 
-  return data;
+  return shuffleArray(data);
 };
 
 const getUserInfo = async (userId) => {
@@ -95,7 +105,7 @@ const prepare = (arr, user) => {
       +user.user.address.longitude
     ).toFixed(1);
 
-    console.log(distance);
+    // console.log(distance);
 
     let matchRate =
       getInterestOneScore(e, user) * 0.3 +
@@ -125,6 +135,7 @@ const prepare = (arr, user) => {
       interest,
     });
   });
+  console.log(data);
   return data;
 };
 
