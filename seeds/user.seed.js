@@ -2,6 +2,21 @@ const faker = require('faker');
 const { User, Profile } = require('../models');
 const { generateToken } = require('../utils');
 
+const random = (arr, min = 1, max = 1) => {
+  arr = arr.slice(0);
+  let chosen = [];
+  let n = Math.floor(Math.random() * (max + 1 - min)) + min;
+  for (let i = 0; i < n; i++) {
+    let index = Math.floor(Math.random() * arr.length);
+    chosen.push(arr[index]);
+    arr.splice(index, 1);
+  }
+  if (min === max && min === 1) {
+    return chosen[0];
+  }
+  return chosen;
+};
+
 module.exports = async (max) => {
   await User.deleteMany({});
   await Profile.deleteMany({});
@@ -34,6 +49,7 @@ module.exports = async (max) => {
         latitude: 14 + Math.random(),
         longitude: 121 + Math.random(),
       },
+      sex: random(['man', 'woman']),
     });
 
     profile = await Profile.create({

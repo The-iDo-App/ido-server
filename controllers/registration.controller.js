@@ -104,7 +104,7 @@ exports.createUser = async (req, res) => {
   //INTEREST PREFERENCE
   const minDistance = 0;
   const {
-    genderPref,
+    genderPref: gender,
     minAge,
     maxAge,
     maxDistance,
@@ -115,6 +115,7 @@ exports.createUser = async (req, res) => {
     wantKids,
     wantMarried,
   } = req.body;
+  console.log(req.body);
 
   //MULTI SELECT PREF
   const {
@@ -183,7 +184,7 @@ exports.createUser = async (req, res) => {
 
     let userInterest = await Interest.create({
       userId,
-      genderPref,
+      gender,
       minAge,
       maxAge,
       minDistance,
