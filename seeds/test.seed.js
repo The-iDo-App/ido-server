@@ -252,21 +252,21 @@ module.exports = async () => {
 
     let currentId = user._id;
     for (let j = i + 1; j < users.length; j++) {
-      await Message.create({
-        participantIds: [currentId, users[j]._id],
-        body: 'a',
-        senderId: currentId,
-      });
-      await Message.create({
-        participantIds: [currentId, users[j]._id],
-        body: 'b',
-        senderId: currentId,
-      });
-      await Message.create({
-        participantIds: [currentId, users[j]._id],
-        body: 'c',
-        senderId: currentId,
-      });
+      // await Message.create({
+      //   participantIds: [currentId, users[j]._id],
+      //   body: 'a',
+      //   senderId: currentId,
+      // });
+      // await Message.create({
+      //   participantIds: [currentId, users[j]._id],
+      //   body: 'b',
+      //   senderId: users[j]._id,
+      // });
+      // await Message.create({
+      //   participantIds: [currentId, users[j]._id],
+      //   body: 'c',
+      //   senderId: currentId,
+      // });
       await Match.create({
         participants: [
           { isLike: false, userId: currentId },

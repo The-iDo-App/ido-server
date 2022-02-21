@@ -3,7 +3,7 @@ const seed = async () => {
   try {
     await require('../startup/db')();
 
-    await require('./user.seed')();
+    await require('./user.seed')(11);
     await require('./avatar.seed')();
     await require('./question.seed')();
     await require('./test.seed')();
