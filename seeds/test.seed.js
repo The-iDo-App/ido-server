@@ -226,7 +226,7 @@ module.exports = async () => {
       maxDistance: faker.datatype.number({ max: 20000, min: 0 }),
       minDistance: 0,
       minAge: 18,
-      maxAge: faker.datatype.number({ max: 65, min: 18 }),
+      maxAge: faker.datatype.number({ max: 30, min: 18 }),
       gender: random(['Men', 'Women', 'Everyone']),
       astrologicalSign,
       religion,

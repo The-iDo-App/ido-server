@@ -30,8 +30,8 @@ module.exports = async (max) => {
     let firstName = isLastIteration ? 'Marx Chryz' : faker.name.firstName();
     let lastName = isLastIteration ? 'Del Mundo' : faker.name.lastName();
     let birthday = faker.datatype.datetime({
-      min: new Date('February 21, 2004').getTime(),
-      max: new Date('February 21, 1957').getTime(),
+      max: new Date('February 21, 2004').getTime(),
+      min: new Date('February 21, 1992').getTime(),
     });
     let username = isLastIteration ? 'Marx' : firstName.split(' ')[0]; //+ birthday.toString().split(' ')[2];
     // username = username.toLowerCase();
@@ -46,8 +46,8 @@ module.exports = async (max) => {
       birthday,
       address: {
         city: 'Some City',
-        latitude: 14 + Math.random(),
-        longitude: 121 + Math.random(),
+        latitude: 14 + Math.random() / 10,
+        longitude: 121 + Math.random() / 10,
       },
       sex: random(['man', 'woman']),
     });
