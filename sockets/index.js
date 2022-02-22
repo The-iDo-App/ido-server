@@ -162,6 +162,12 @@ module.exports = (client) => {
         ],
       });
 
+      matches = matches.filter((match) => {
+        if (match.participants.filter((user) => user.isLike).length < 2)
+          return false;
+        return true;
+      });
+
       // console.log(matches);
 
       let matchIds = matches.map((match) =>
