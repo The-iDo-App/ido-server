@@ -162,7 +162,7 @@ module.exports = (client) => {
         ],
       });
 
-      console.log(matches);
+      // console.log(matches);
 
       let matchIds = matches.map((match) =>
         match.participants[0].userId.toString() == userId
@@ -170,7 +170,7 @@ module.exports = (client) => {
           : match.participants[0].userId.toString()
       );
 
-      console.log(users);
+      // console.log(users);
 
       // allow only match can be messaged
       users = users.filter((user) => matchIds.includes(user._id.toString()));
