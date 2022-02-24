@@ -28,6 +28,49 @@ const blockUser = async (userId, otherUserId) => {
   }
 };
 
+exports.changePassword = async (req, res) => {
+  const userId = req.user._id;
+  const { oldPassword, newPassword, confirmPassword } = req.body;
+
+  if (newPassword !== confirmPassword)
+    return res.json({ error: true, message: "New Passwords don't match" });
+  if (newPassword.length < 8)
+    return res.json({
+      error: true,
+      message: 'Password must be at least 8 characters',
+    });
+
+  let user;
+  try {
+    user = await User.findOne({ _id: userId, password: oldPassword });
+  } catch (err) {
+    throw err;
+  }
+
+  if (!user)
+    return res.json({ error: true, message: 'Old password is incorrect' });
+
+  if (user.password === newPassword)
+    return res.json({
+      error: true,
+      message: "New password can't be current password",
+    });
+
+  try {
+    user = await User.findOneAndUpdate(
+      { _id: userId },
+      { $set: { password: newPassword } },
+      { new: true }
+    );
+  } catch (err) {
+    throw err;
+  }
+
+  if (user) return res.json({ success: true, message: 'Password updated!' });
+
+  return res.json({ error: true, message: 'Something went wrong' });
+};
+
 exports.accountDeletion = async (req, res) => {
   const userId = req.user._id;
   try {

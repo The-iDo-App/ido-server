@@ -18,6 +18,10 @@ router
 router.route('/report-user').post([jwtAuth], settingController.reportUser);
 
 router
+  .route('/change-password')
+  .put([jwtAuth], settingController.changePassword);
+
+router
   .use(jwtAuth)
   .route('/blocked-users')
   .get(settingController.getBlockedUsers)
