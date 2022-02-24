@@ -2,6 +2,23 @@ const { User, Profile, Interest } = require('../models');
 const { saveImage } = require('../utils');
 const { avatars } = require('./registration.controller');
 
+exports.put = async (req, res) => {
+  let { userId } = req.params;
+  let interest;
+  console.log(req.body);
+  try {
+    interest = await Interest.findOneAndUpdate(
+      { userId },
+      { $set: req.body.preferences },
+      { new: true }
+    );
+  } catch (err) {
+    throw err;
+  }
+
+  return res.json({ success: true, interest });
+};
+
 exports.get = async (req, res) => {
   let interests;
   let profiles;
