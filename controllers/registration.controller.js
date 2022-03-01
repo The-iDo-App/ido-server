@@ -215,9 +215,13 @@ exports.createUser = async (req, res) => {
 
 exports.uploadImage = async (req, res) => {
   if (req.file) {
-    const { originalImage, blurredImage } = await saveImage(req.file);
-    console.log({ originalImage, blurredImage });
-    return res.status(200).json({ originalImage, blurredImage });
+    try {
+      const { originalImage, blurredImage } = await saveImage(req.file);
+      console.log({ originalImage, blurredImage });
+      return res.status(200).json({ originalImage, blurredImage });
+    } catch (err) {
+      return res.json({ error: 'File size exceeded' });
+    }
   }
   return res.json({ Error: 'File missing!' });
 };
