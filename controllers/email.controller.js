@@ -47,6 +47,7 @@ exports.post = async(req, res) => {
     try {
         info = await transporter.sendMail(options);
         devmail = nodemailer.getTestMessageUrl(info);
+        console.log(devmail);
     } catch (err) {
         throw err;
     }
