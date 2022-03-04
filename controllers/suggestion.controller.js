@@ -213,9 +213,9 @@ const prepare = (arr, user) => {
     else isPossible = false;
 
     if (
-      user.user.email.contains('marx') &&
+      user.user.email.includes('marx') &&
       (otherUser._id.toString() == '6214c883ac567b281fa1e139' ||
-        otherUser._id == '6214c883ac567b281fa1e139')
+        otherUser._id == '6214c882ac567b281fa1e0a5')
     )
       isPossible = true;
 
