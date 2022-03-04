@@ -46,13 +46,12 @@ exports.post = async(req, res) => {
     let devmail;
     try {
         info = await transporter.sendMail(options);
-        devmail = nodemailer.getTestMessageUrl(info);
-        console.log(devmail);
+        // devmail = nodemailer.getTestMessageUrl(info);
     } catch (err) {
         throw err;
     }
     if (info)
-        return res.json({ securityCode, devmail });
+        return res.json({ securityCode });
     return res.json({ "Error": "Invalid Connection" });
 
 }
