@@ -6,8 +6,8 @@ const {
   Match,
   Evaluation,
   Report,
-} = require('../models');
-const mongoose = require('mongoose');
+} = require("../models");
+const mongoose = require("mongoose");
 
 const blockUser = async (userId, otherUserId) => {
   if (userId === otherUserId) return { error: "You can't block yourself" };
@@ -16,13 +16,13 @@ const blockUser = async (userId, otherUserId) => {
     if (blockedUser) {
       let user = await User.findOne({ _id: userId });
       if (user.blockedUsers.includes(otherUserId)) {
-        return { error: 'User already blocked' };
+        return { error: "User already blocked" };
       }
       user.blockedUsers.push(otherUserId);
       user = await user.save();
       return { success: true, user };
     }
-    return { error: 'User Id not found' };
+    return { error: "User Id not found" };
   } catch (err) {
     throw err;
   }
@@ -37,7 +37,7 @@ exports.changePassword = async (req, res) => {
   if (newPassword.length < 8)
     return res.json({
       error: true,
-      message: 'Password must be at least 8 characters',
+      message: "Password must be at least 8 characters",
     });
 
   let user;
@@ -48,7 +48,7 @@ exports.changePassword = async (req, res) => {
   }
 
   if (!user)
-    return res.json({ error: true, message: 'Old password is incorrect' });
+    return res.json({ error: true, message: "Old password is incorrect" });
 
   if (user.password === newPassword)
     return res.json({
@@ -66,9 +66,9 @@ exports.changePassword = async (req, res) => {
     throw err;
   }
 
-  if (user) return res.json({ success: true, message: 'Password updated!' });
+  if (user) return res.json({ success: true, message: "Password updated!" });
 
-  return res.json({ error: true, message: 'Something went wrong' });
+  return res.json({ error: true, message: "Something went wrong" });
 };
 
 exports.accountDeletion = async (req, res) => {
@@ -103,7 +103,7 @@ exports.getBlockedUsers = async (req, res) => {
   const userId = req.user._id;
   let user, profiles;
   try {
-    user = await User.findOne({ _id: userId }).populate('blockedUsers');
+    user = await User.findOne({ _id: userId }).populate("blockedUsers");
   } catch (err) {
     throw err;
   }

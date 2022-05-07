@@ -1,6 +1,6 @@
-const { User, Profile, Interest } = require('../models');
-const { saveImage } = require('../utils');
-const { avatars } = require('./registration.controller');
+const { User, Profile, Interest } = require("../models");
+const { saveImage } = require("../utils");
+const { avatars } = require("./registration.controller");
 
 exports.put = async (req, res) => {
   let { userId } = req.params;
@@ -16,7 +16,8 @@ exports.put = async (req, res) => {
     throw err;
   }
 
-  return res.json({ success: true, interest });
+  if (interest.modifiedCount) return res.json({ success: true, interest });
+  else return res.json({ message: "User not found" });
 };
 
 exports.get = async (req, res) => {
@@ -26,8 +27,8 @@ exports.get = async (req, res) => {
   let { userId } = req.params;
   let filteredUser;
   try {
-    interests = await Interest.find().populate('userId');
-    profiles = await Profile.find().populate('userId');
+    interests = await Interest.find().populate("userId");
+    profiles = await Profile.find().populate("userId");
   } catch (err) {
     throw err;
   }
@@ -46,7 +47,7 @@ exports.get = async (req, res) => {
     );
     return res.json({ users: filteredUser });
   }
-  return res.json({ error: 'Not found' });
+  return res.json({ message: "Not found" });
 };
 
 exports.getOne = async (req, res) => {
@@ -57,7 +58,7 @@ exports.getOne = async (req, res) => {
   } catch (err) {
     throw err;
   }
-  if (!user) return res.json({ error: 'Not Found' });
+  if (!user) return res.json({ error: "Not Found" });
   return res.json({ success: true, user, interest });
 };
 
@@ -72,19 +73,19 @@ exports.getUserInfo = async (req, res) => {
     throw err;
   }
   if (user) return res.json({ userId, user, interest, profile });
-  return res.json({ error: 'Not found' });
+  return res.json({ message: "Not found" });
 };
 
 exports.getUsers = async (req, res) => {
   let users;
   try {
-    users = await Profile.find().populate('userId');
+    users = await Profile.find().populate("userId");
     users = users.filter((user) => user.userId !== null);
   } catch (err) {
     throw err;
   }
   if (users) return res.json({ success: true, users });
-  return res.json({ error: 'Not found' });
+  return res.json({ message: "Not found" });
 };
 
 exports.post = async (req, res) => {
@@ -130,7 +131,7 @@ exports.post = async (req, res) => {
   } else if (avatar) {
     // pag avatar id
     avatar = avatars.filter((a) => a.id == avatar);
-    avatar = avatar.length ? avatar[0].avatar : '';
+    avatar = avatar.length ? avatar[0].avatar : "";
     try {
       user = await Profile.findOneAndUpdate(
         { userId: req.params.userId },

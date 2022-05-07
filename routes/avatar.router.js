@@ -1,8 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { avatarController } = require('../controllers');
+const { avatarController } = require("../controllers");
+const { catchErrors } = require("../handlers/error.handler");
 
-router.route('/')
-    .get(avatarController.getAvatars);
+router.route("/").get(catchErrors(avatarController.getAvatars));
 
 module.exports = router;

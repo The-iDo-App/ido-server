@@ -1,8 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { questionController } = require('../controllers');
+const { questionController } = require("../controllers");
+const { catchErrors } = require("../handlers/error.handler");
 
-router.route('/')
-    .get(questionController.get);
+router.route("/").get(catchErrors(questionController.get));
 
 module.exports = router;
